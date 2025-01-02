@@ -1,0 +1,50 @@
+{
+  "name": "frontendquiz",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fontsource/inter": "^5.1.1",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.3",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "axios": "^1.7.9",
+    "cra-template": "^1.2.0",
+    "cra-template-typescript": "^1.2.0",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "react": "^19.0.0",
+    "react-confetti": "^6.2.2",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.1",
+    "react-scripts": "5.0.1",
+    "tailwind": "^4.0.0",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.7.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
