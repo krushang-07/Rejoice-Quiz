@@ -11,12 +11,25 @@ dotenv.config();
 
 const app = express();
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true, // Allow credentials (cookies, HTTP authentication)
-};
+const allowedOrigins = [
+  "http://localhost:3000", // Local development
+  "https://rejoice-quiz.vercel.app", // Deployed frontend
+];
 
-app.use(cors(corsOptions));
+// Enable CORS with dynamic origin checking
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true); // Allow the origin
+      } else {
+        callback(new Error("Not allowed by CORS")); // Reject the origin
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
