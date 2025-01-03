@@ -20,14 +20,16 @@ const Login: React.FC = () => {
       );
 
       const { role, token } = response.data;
+ 
 
       if (role === "admin") {
         Cookies.set("admin_token", token, { expires: 7, path: "" });  
         Cookies.set("role", "admin", { expires: 7, path: "" }); 
+        Cookies.set("username", username, { expires: 7, path: "" });
       } else {
         Cookies.set("user_token", token, { expires: 7, path: "" }); 
         Cookies.set("role", "user", { expires: 7, path: "" });  
-  
+        Cookies.set("username", username, { expires: 7, path: "" });
       }
       navigate("/"); 
     } catch (err) {

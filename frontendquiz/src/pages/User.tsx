@@ -91,21 +91,19 @@ const User: React.FC = () => {
     );
     setScore(score);
     setQuizCompleted(true);
-    const name = prompt("Enter your name for the leaderboard:");
+    // Get username from cookies or user token
+  const username = Cookies.get("username") || "Anonymous";
 
-    if (name) {
-      const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-      leaderboard.push({ name, score: score });
-      leaderboard.sort((a, b) => b.score - a.score);
-      if (leaderboard.length > 5) {
-        leaderboard.pop();
-      }
-      localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-      alert("Your score has been added to the leaderboard!");
-    } else {
-      alert("Leaderboard entry canceled.");
-    }
-    
+  // Save score to localStorage
+  const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  leaderboard.push({ name: username, score });
+  leaderboard.sort((a, b) => b.score - a.score);
+  if (leaderboard.length > 5) {
+    leaderboard.pop(); // Keep only top 5 scores
+  }
+  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+  alert("Your score has been added to the leaderboard!");
   };
 
   if (!quizList.length) {

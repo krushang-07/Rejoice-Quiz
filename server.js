@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
 import userRoutes from "./routes/user.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
@@ -17,13 +19,10 @@ app.use(express.json());
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://krushangsavaliya45:D04NupVJfsiRiwho@cluster0.qyexe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    );
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("MongoDB connected!");
   } catch (error) {
     console.error("MongoDB connection error:", error);
