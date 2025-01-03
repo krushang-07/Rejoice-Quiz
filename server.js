@@ -13,24 +13,34 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:3000", // React frontend running on port 3000
-  "https://rejoice-quiz.vercel.app", // Deployed frontend
-  "http://localhost:5000", // Backend itself during development
-];
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? [process.env.PRODUCTION_URL]
+    : [
+        "http://localhost:3000", // React frontend during development
+        "http://localhost:5000", // Backend itself during development
+      ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // console.log("Incoming origin:", origin);
-      if (
-        allowedOrigins.includes(origin) || // Allow listed origins
-        !origin || // Allow no origin for non-browser requests (e.g., Postman)
-        origin.includes("localhost") // Allow localhost for development
-      ) {
-        callback(null, true); // Allow the origin
+      // In production, allow only the listed origins
+      if (process.env.NODE_ENV === "production") {
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true); // Allow the origin
+        } else {
+          callback(new Error("Not allowed by CORS")); // Reject the origin
+        }
       } else {
-        callback(new Error("Not allowed by CORS")); // Reject the origin
+        // In development, allow localhost and non-browser requests
+        if (
+          origin &&
+          (origin.includes("localhost") || allowedOrigins.includes(origin))
+        ) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -78,7 +88,7 @@ app.get("/", (req, res) => {
 });
 
 // Set up the server to listen on port 5000
-const PORT = 5000;
+const PORT = 5000 || process.env.PORT;
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
 );
