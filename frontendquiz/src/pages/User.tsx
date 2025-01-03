@@ -35,7 +35,7 @@ const User: React.FC = () => {
     const fetchQuizzes = async () => {
       try {
         const token = Cookies.get("user_token");
-        const response = await axios.get<Quiz[]>("http://localhost:5000/api/user/quizzes", {
+        const response = await axios.get<Quiz[]>("/api/user/quizzes", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setQuizList(response.data);

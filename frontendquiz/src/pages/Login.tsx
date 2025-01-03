@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post<{ role: string; token: string }>(
-        "http://localhost:5000/api/auth/login",
+        "/api/auth/login",
         { username, password },
         { withCredentials: true }
       );

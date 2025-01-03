@@ -18,7 +18,7 @@ const Signup: React.FC = () => {
         setError("Invalid role selected.");
         return;
       }
-      const response = await axios.post("http://localhost:5000/api/auth/register", { username, password, role });
+      const response = await axios.post("/api/auth/register", { username, password, role });
 
       if (response.status === 201) {
         navigate("/login");
