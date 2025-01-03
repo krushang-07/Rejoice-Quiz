@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
 import userRoutes from "./routes/user.js";
 import dotenv from "dotenv";
+import path from "path";
 dotenv.config();
 
 const app = express();
@@ -16,6 +17,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, "frontendquiz/build")));
+
+// Handle React frontend routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontendquiz/build", "index.html"));
+});
 
 const connectDB = async () => {
   try {
