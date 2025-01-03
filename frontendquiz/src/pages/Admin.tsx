@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useTheme } from "../utils/ThemeProvider.tsx";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { FaPlus, FaCheck } from "react-icons/fa";
+import { MdDelete } from "react-icons/md"; // Added delete icon
+import PreventScrolling from "../custom/PreventScrolling.tsx";
 
 type Question = {
   question: string;
@@ -20,8 +23,8 @@ const Admin: React.FC = () => {
   const { theme } = useTheme();
 
   const [question, setQuestion] = useState<string>("");
-  const [currentOption, setCurrentOption] = useState<string>(""); // Current option input
-  const [options, setOptions] = useState<string[]>([]); // Array of options
+  const [currentOption, setCurrentOption] = useState<string>(""); 
+  const [options, setOptions] = useState<string[]>([]);
   const [correctAnswer, setCorrectAnswer] = useState<string>("");
   const [timer, setTimer] = useState<number>(10);
 
@@ -39,11 +42,10 @@ const Admin: React.FC = () => {
       return;
     }
     setOptions((prevOptions) => [...prevOptions, currentOption.trim()]);
-    setCurrentOption(""); // Clear input field
+    setCurrentOption(""); 
   };
 
   const updateOption = (index: number, value: string) => {
-    //updated value are not empty
     const trimmedValue = value.trim();
     if (trimmedValue === "") {
       alert("Option cannot be empty.");
@@ -54,9 +56,11 @@ const Admin: React.FC = () => {
     setOptions(updatedOptions);
   };
 
-  const addQuestion = () => {
+  const deleteOption = (index: number) => {
+    setOptions(options.filter((_, i) => i !== index));
+  };
 
-    //all validation for the question and options
+  const addQuestion = () => {
     if (!question.trim() || options.length < 2 || !correctAnswer.trim()) {
       alert("Please fill in all fields and add at least two options.");
       return;
@@ -74,24 +78,18 @@ const Admin: React.FC = () => {
 
   const saveQuiz = async () => {
     const token = Cookies.get("admin_token");
-
     if (!token) {
       alert("You must be logged in as an admin to save a quiz!");
       return;
     }
 
     try {
-      const response = await axios.post(
-        "/api/admin/quizzes",
-        quiz,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const response = await axios.post("/api/admin/quizzes", quiz, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       alert(response.data.message);
       setQuiz({ title: "", questions: [] });
     } catch (error) {
@@ -99,10 +97,11 @@ const Admin: React.FC = () => {
       alert("Error saving quiz. Please try again.");
     }
   };
+  PreventScrolling();
 
   return (
     <div
-      className={`min-h-screen p-6 ${
+      className={`min-h-screen p-6 transition-all ease-in-out duration-300 ${
         theme === "light" ? "bg-gradient-to-r from-white to-white" : "bg-black"
       } text-white`}
     >
@@ -111,7 +110,7 @@ const Admin: React.FC = () => {
           theme === "light" ? "bg-white text-black" : "bg-gray-800 text-white"
         }`}
       >
-        <h1 className="text-4xl font-extrabold text-center mb-8 tracking-wide">
+        <h1 className="text-4xl font-extrabold text-center mb-8 tracking-wide text-gradient">
           QuizHub Admin Dashboard
         </h1>
         <input
@@ -137,44 +136,50 @@ const Admin: React.FC = () => {
               theme === "light" ? "bg-white" : "bg-gray-900"
             }`}
           />
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center mb-4">
             <input
               type="text"
               placeholder="Add an Option"
               value={currentOption}
               onChange={(e) => setCurrentOption(e.target.value)}
-              className={`border p-3 my-4 w-full text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 ${
+              className={`border p-3 w-full text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 ${
                 theme === "light" ? "bg-white" : "bg-gray-900"
               }`}
             />
             <button
               onClick={addOption}
               disabled={options.length >= 4}
-              className={`px-4 py-2 rounded shadow ${
+              className={`px-4 py-2 rounded-lg shadow transition-all duration-300 ease-in-out ${
                 options.length >= 4
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-700 text-white hover:bg-blue-900"
+                  : "bg-blue-600 text-white hover:bg-blue-800"
               }`}
             >
-              Add
+              <FaPlus />
             </button>
           </div>
           <ul className="list-none list-inside mb-4">
             {options.map((option, index) => (
-              <li key={index} className="flex items-center gap-2 mb-2">
+              <li key={index} className="flex items-center gap-2 mb-2 transition-all duration-300">
                 <input
                   type="text"
                   value={option}
-                  onChange={(e) => updateOption(index, e.target.value)}  //pass two value index and value 
-                  className={`border p-2 text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 ${
+                  onChange={(e) => updateOption(index, e.target.value)}
+                  className={`border p-3 text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 ${
                     theme === "light" ? "bg-white" : "bg-gray-900"
                   }`}
                 />
                 <button
-                  onClick={() => updateOption(index, option)}
-                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700"
+                  onClick={() => deleteOption(index)}
+                  className="text-red-500 hover:text-red-700 transition-all"
                 >
-                  Update
+                  <MdDelete />
+                </button>
+                <button
+                  onClick={() => updateOption(index, option)}
+                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700 transition-all"
+                >
+                  <FaCheck />
                 </button>
               </li>
             ))}
@@ -206,7 +211,7 @@ const Admin: React.FC = () => {
         </div>
         <button
           onClick={saveQuiz}
-          className="bg-green-600 text-white px-6 py-2 mt-6 rounded-lg shadow-lg w-full hover:bg-green-700 transition-transform transform hover:scale-105"
+          className="bg-green-600 text-white px-6 py-2 mt-6 rounded-lg shadow-lg w-full hover:bg-green-700 transition-all transform hover:scale-105"
         >
           Save Quiz
         </button>

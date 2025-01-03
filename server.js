@@ -7,46 +7,30 @@ import userRoutes from "./routes/user.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-
-// Load environment variables early
 dotenv.config();
-
 const app = express();
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, // Allow credentials (cookies, HTTP authentication)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-const allowedOrigins =
-  process.env.NODE_ENV === "production"
-    ? [process.env.PRODUCTION_URL]
-    : [
-        "http://localhost:3000", // React frontend during development
-        "http://localhost:5000", // Backend itself during development
-      ];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // In production, allow only the listed origins
-      if (process.env.NODE_ENV === "production") {
-        if (allowedOrigins.includes(origin)) {
-          callback(null, true); // Allow the origin
-        } else {
-          callback(new Error("Not allowed by CORS")); // Reject the origin
-        }
-      } else {
-        // In development, allow localhost and non-browser requests
-        if (
-          origin &&
-          (origin.includes("localhost") || allowedOrigins.includes(origin))
-        ) {
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors(corsOptions));
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       console.log("Incoming origin:", origin);
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true); // Allow the request from the allowed origins
+//       } else {
+//         callback(new Error("Not allowed by CORS")); // Reject requests from other origins
+//       }
+//     },
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
@@ -65,7 +49,6 @@ const connectDB = async () => {
   }
 };
 
-// Call connectDB function
 connectDB();
 
 // Define path for serving static files (React app)
@@ -88,7 +71,7 @@ app.get("/", (req, res) => {
 });
 
 // Set up the server to listen on port 5000
-const PORT = 5000 || process.env.PORT;
+const PORT = 5000;
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
 );

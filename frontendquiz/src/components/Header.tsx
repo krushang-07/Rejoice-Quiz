@@ -1,7 +1,7 @@
 import React from "react";
 import { useTheme } from "../utils/ThemeProvider.tsx";
 import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"; // Import Cookies for cookie management
+import Cookies from "js-cookie";
 
 const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -17,17 +17,16 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`sticky top-0 z-50 p-4 shadow-md ${
-        theme === "dark" ? "bg-black text-white" : "bg-gray-100 text-gray-900"
+      className={`sticky top-0 z-50 p-4 shadow-md transition-all duration-300 ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
       <div className="flex items-center justify-between max-w-6xl mx-auto">
-        <Link to="/" className="text-xl font-bold">QuizHub</Link>
-        <div className="flex items-center space-x-4">
-          <span className="text-lg font-semibold">
-            {theme === "dark" ? "Dark Mode" : "Light Mode"}
-          </span>
-          {/* Toggle Switch */}
+        <Link to="/" className="text-3xl font-extrabold text-center sm:text-left">QuizHub</Link>
+        <div className="flex items-center space-x-6">
+          <span className="text-lg font-semibold">{theme === "dark" ? "Dark Mode" : "Light Mode"}</span>
+          
+          {/* Theme Toggle Switch */}
           <label htmlFor="theme-toggle" className="flex items-center cursor-pointer">
             <input
               type="checkbox"
@@ -37,21 +36,22 @@ const Header: React.FC = () => {
               onChange={toggleTheme}
             />
             <div
-              className={`w-10 h-6 flex items-center rounded-full p-1 transition-colors ${
+              className={`w-12 h-7 flex items-center rounded-full p-1 transition-all ${
                 theme === "dark" ? "bg-blue-500" : "bg-gray-300"
               }`}
             >
               <div
-                className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${
-                  theme === "dark" ? "translate-x-4" : "translate-x-0"
+                className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
+                  theme === "dark" ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </div>
           </label>
 
+          {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+            className="bg-red-500 text-white py-2 px-6 rounded-full hover:bg-red-600 transition-all"
           >
             Logout
           </button>

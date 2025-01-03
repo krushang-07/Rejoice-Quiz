@@ -11,6 +11,10 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import LeaderBoard from "./pages/LeaderBoard.tsx";
 
+// Set the base URL for axios
+axios.defaults.baseURL = "http://localhost:5000";
+
+
 const App: React.FC = () => {
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true); 

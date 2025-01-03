@@ -24,7 +24,7 @@ router.post("/register", async (req, res) => {
       role,
     });
     await newUser.save();
-    console.log(newUser.username);
+    //  console.log(newUser.username);
 
     // Generate a token
     const token = jwt.sign({ id: newUser._id, role: newUser.role }, "aaaaaaa", {
