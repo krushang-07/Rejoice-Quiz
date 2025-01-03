@@ -6,6 +6,7 @@ import adminRoutes from "./routes/admin.js";
 import userRoutes from "./routes/user.js";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from "url";
 dotenv.config();
 
 const app = express();
@@ -17,6 +18,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, "frontendquiz/build")));
