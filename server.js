@@ -9,15 +9,14 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration
 const corsOptions = {
-  origin: "https://rejoice-quiz-frontend.vercel.app/", // Update with your frontend URL
-  credentials: true,
+  origin: "http://localhost:3000", // Correctly match frontend origin without trailing slash
+  credentials: true, // Allow cookies and credentials
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
@@ -45,6 +44,24 @@ app.use("/api/user", userRoutes);
 // Root endpoint
 app.get("/", (req, res) => {
   res.send("Backend API is up and running!");
+});
+app.get("/api/get-microsoft-credentials", (req, res) => {
+  res.json({
+    data: [
+      {
+        email: "@shailesh312rejoicegmail.onmicrosoft.com",
+        clientId: "9151c0d5-07d8-4b63-9636-8fb08417e666",
+        authority:
+          "https://login.microsoftonline.com/7e5f3926-3cba-4896-9658-d6f907769a67",
+      },
+      {
+        email: "@rejoice.com",
+        clientId: "9151c0d5-07d8-4b63-9636-8fb08417e666",
+        authority:
+          "https://login.microsoftonline.com/7e5f3926-3cba-4896-9658-d6f907769a60",
+      },
+    ],
+  });
 });
 
 // Vercel specific export handler

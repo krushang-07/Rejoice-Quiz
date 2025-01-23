@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import LeaderBoard from "./pages/LeaderBoard.tsx";
 
+
 // Set the base URL for axios
 axios.defaults.baseURL = "http://localhost:5000";
 
